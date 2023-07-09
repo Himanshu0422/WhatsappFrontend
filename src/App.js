@@ -1,12 +1,23 @@
-import { ChatIcon } from './svg/index';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import { useSelector } from 'react-redux';
 
 function App() {
-  return (
-    <div>
-      <h1>Hello</h1>
-      <ChatIcon />
-    </div>
-  );
+	const { user } = useSelector((state) => state.user); 
+
+	return (
+		<div className='dark'>
+			<Router>
+				<Routes>
+					<Route path='/' element={<Home />} />
+					<Route path='/login' element={<Login />} />
+					<Route path='/register' element={<Register />} />
+				</Routes>
+			</Router>
+		</div>
+	);
 }
 
 export default App;
