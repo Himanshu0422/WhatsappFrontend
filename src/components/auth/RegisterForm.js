@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { signUpSchema } from '../../utils/validation';
@@ -6,27 +6,52 @@ import AuthInput from './AuthInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { PulseLoader } from 'react-spinners/'
 import { Link, useNavigate } from 'react-router-dom';
-import { registerUser } from '../../features/userSlice';
+import { changeStatus, registerUser } from '../../features/userSlice';
+import Picture from './Picture';
+import axios from 'axios';
+const cloudSecret = process.env.REACT_APP_CLOUD_SECRET;
+const cloudName = process.env.REACT_APP_CLOUD_NAME;
 
 function RegisterForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { status, error } = useSelector((state) => state.user);
+    const [picture, setPicture] = useState();
+    const [readalblePicture, setReadablePicture] = useState("");
+
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(signUpSchema),
     });
     const onSubmit = async (data) => {
-        const res = await dispatch(registerUser({ ...data, picture: ""}));
+        let res;
+        dispatch(changeStatus("loading"))
+        if(picture){
+            await uploadImgae().then(async(val)=>{
+                res = await dispatch(registerUser({ ...data, picture: val.secure_url}));
+            });
+        }else{
+            res = await dispatch(registerUser({ ...data, picture: ""}));
+        }
         if(res?.payload?.user){
             navigate("/");
         }
     };
+
+    const uploadImgae = async ()=>{
+        let formData = new FormData();
+        formData.append("upload_preset", cloudSecret);
+        formData.append("file", picture);
+        const {data} = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
+        console.log(data);
+        return data;
+    }
+
     // console.log("values", watch());
     // console.log("errors", errors);
-
+    // console.log(picture, readalblePicture);
     return (
-        <div className="h-screen w-full flex items-center justify-center overflow-hidden">
-            <div className="max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
+        <div className="min-h-screen w-full flex items-center justify-center overflow-hidden">
+            <div className="w-full max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
                 <div className="text-center dark:text-dark_text_1">
                     <h2 className="mt-6 text-3xl font-bold">Welcome</h2>
                     <p className="mt-2 text-sm">Sign up</p>
@@ -50,7 +75,7 @@ function RegisterForm() {
                     <AuthInput 
                         name="status"
                         type="text"
-                        placeholder="Status"
+                        placeholder="Status (Optional)"
                         register={register}
                         error={errors?.status?.message}
                     />
@@ -60,6 +85,11 @@ function RegisterForm() {
                         placeholder="Password"
                         register={register}
                         error={errors?.password?.message}
+                    />
+                    <Picture 
+                        readalblePicture={readalblePicture}
+                        setReadablePicture={setReadablePicture}
+                        setPicture={setPicture}
                     />
                     {error ? (
                         <div>
@@ -75,10 +105,10 @@ function RegisterForm() {
                     </button>
                 </form>
                 <p className="flex flex-col items-center justify-center mt-10 text-center text-md dark:text-dark_text_1">
-                    <span>have an account ?</span>
-                    <Link href="/login" className="dark:text-dark_hover_1 hover: underline cursor-pointer transition ease-in duration-300">
+                    <span>Already have an account ?</span>
+                    <Link to="/login" className="dark:text-dark_hover_1 hover: underline cursor-pointer transition ease-in duration-300">
                         Sign in
-                    </Link> 
+                    </Link>
                 </p>
             </div>
         </div>
