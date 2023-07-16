@@ -2,7 +2,6 @@ import React from 'react';
 import { dateHandler } from '../../../utils/date';
 
 function Conversation({ convo }) {
-    console.log(convo);
     return (
         <li className='list-none h-[72px] w-full dark:bg-dark_bg_1 hover:dark:bg-dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px]'>
             <div className="relative w-full flex items-center justify-between py-[10px]">
@@ -32,6 +31,7 @@ function Conversation({ convo }) {
                     </span>
                 </div>
             </div>
+            <div className="ml-16 border-b dark:border-b-dark_border_1"></div>
         </li>
     )
 }
