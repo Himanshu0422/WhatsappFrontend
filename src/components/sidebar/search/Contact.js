@@ -1,7 +1,23 @@
+import { useDispatch, useSelector } from "react-redux";
+import { open_create_conversation } from "../../../features/chatSlice";
+import { capitalize } from "../../../utils/strings";
 
 export const Contact = ({ contact, setSearchResults, socket })=>{
+
+    const dispatch = useDispatch();
+    const { user } = useSelector((state)=> state.user);
+    const { token } = user;
+    const values = {
+        receiver_id: contact._id,
+        token
+    }
+    // console.log(values);
+    const openConversation = ()=>{
+        dispatch(open_create_conversation(values))
+    }
+
     return (
-        <li className="list-none h-[72px] hover:dark:bg-dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px]">
+        <li onClick={()=> openConversation()} className="list-none h-[72px] hover:dark:bg-dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px]">
             <div className="flex items-center gap-x-3 py-[10px]">
                 <div className="flex items-center gap-x-3">
                     <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
@@ -13,7 +29,7 @@ export const Contact = ({ contact, setSearchResults, socket })=>{
                     </div>
                     <div className="w-full flex flex-col">
                         <h1 className="font-bold flex items-center gap-x-2">
-                            {contact.name}
+                            {capitalize(contact.name)}
                         </h1>
                         <div>
                             <div className="flex items-center gap-x-1 dark:text-dark_text_2">
