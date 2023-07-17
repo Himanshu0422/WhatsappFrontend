@@ -6,6 +6,7 @@ const initialState = {
     error: "",
     conversations: [],
     activeConversation: {},
+    messages: [],
     notificatoins: []
 };
 
@@ -14,6 +15,40 @@ export const getConversations = createAsyncThunk(
     async (token, { rejectWithValue }) => {
         try {
             const { data } = await axios.get('/conversation', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response.data.error.message);
+        }
+    }
+);
+
+export const open_create_conversation = createAsyncThunk(
+    "conervsation/open_create",
+    async (values, { rejectWithValue }) => {
+        const { token, receiver_id } = values;
+        try {
+            const { data } = await axios.post('/conversation', { receiver_id }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response.data.error.message);
+        }
+    }
+);
+
+export const getConversationMessages = createAsyncThunk(
+    "conervsation/messages",
+    async (values, { rejectWithValue }) => {
+        const { token, convo_id } = values;
+        try {
+            const { data } = await axios.get( `/message/${convo_id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -36,17 +71,39 @@ export const chatSlice = createSlice({
     },
     extraReducers(builder) {
         builder
-        .addCase(getConversations.pending, (state, action) => {
-            state.status = "loading";
-        })
-        .addCase(getConversations.fulfilled, (state, action) => {
-            state.status = "succeeded";
-            state.conversations = action.payload;
-        })
-        .addCase(getConversations.rejected, (state, action) => {
-            state.status = "failed";
-            state.error = action.payload;
-        })
+            .addCase(getConversations.pending, (state, action) => {
+                state.status = "loading";
+            })
+            .addCase(getConversations.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.conversations = action.payload;
+            })
+            .addCase(getConversations.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload;
+            })
+            .addCase(open_create_conversation.pending, (state, action) => {
+                state.status = "loading";
+            })
+            .addCase(open_create_conversation.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.activeConversation = action.payload;
+            })
+            .addCase(open_create_conversation.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload;
+            })
+            .addCase(getConversationMessages.pending, (state, action) => {
+                state.status = "loading";
+            })
+            .addCase(getConversationMessages.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.messages = action.payload;
+            })
+            .addCase(getConversationMessages.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload;
+            })
     },
 });
 
