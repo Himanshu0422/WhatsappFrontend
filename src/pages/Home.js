@@ -18,7 +18,7 @@ export default function Home() {
 	
 
 	return (
-		<div className='h-screen dark:bg-dark_bg_1 flex items-center justify-center py-[19px] overflow-hidden'>
+		<div className='h-screen dark:bg-dark_bg_1 flex items-center justify-center pt-[1px] overflow-hidden'>
 			<div className='container h-screen flex'>
 				<Sidebar />
 				{activeConversation?._id ? 
