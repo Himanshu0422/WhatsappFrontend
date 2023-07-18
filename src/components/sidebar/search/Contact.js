@@ -12,8 +12,9 @@ export const Contact = ({ contact, setSearchResults, socket })=>{
         token
     }
     // console.log(values);
-    const openConversation = ()=>{
-        dispatch(open_create_conversation(values))
+    const openConversation = async ()=>{
+        await dispatch(open_create_conversation(values));
+        setSearchResults([]);
     }
 
     return (

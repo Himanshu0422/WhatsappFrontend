@@ -4,12 +4,14 @@ import Conversation from './Conversation';
 
 function Conversations() {
 
-    const { conversations } = useSelector((state) => state.chat)
+    const { conversations, activeConversation } = useSelector((state) => state.chat)
 
     return (
         <div className='convos scrollbar'>
             <ul>
-                {conversations && conversations.map((convo) => (
+                {conversations && conversations
+                    .filter((c) => c.latestMessage || c._id === activeConversation._id)
+                    .map((convo) => (
                     <Conversation convo={convo} key={convo._id} />
                 ))}
             </ul>
