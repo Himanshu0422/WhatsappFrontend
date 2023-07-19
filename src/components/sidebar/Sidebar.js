@@ -5,7 +5,7 @@ import { Search } from './search'
 import { Conversations } from './conversations';
 import SearchResults from './search/SearchResults.js';
 
-function Sidebar() {
+function Sidebar({onlineUsers, typing}) {
 
 	const [searchResults, setSearchResults] = useState([]);
 
@@ -17,7 +17,7 @@ function Sidebar() {
 			{searchResults.length > 0 ? (
 				<SearchResults searchResults={searchResults} setSearchResults={setSearchResults} />
 			):(
-				<Conversations />
+				<Conversations onlineUsers={onlineUsers} typing={typing} />
 			)}
 		</div>
 	)
