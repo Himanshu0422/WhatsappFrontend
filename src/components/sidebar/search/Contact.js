@@ -1,24 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import { open_create_conversation } from "../../../features/chatSlice";
 import { capitalize } from "../../../utils/strings";
+import SocketContext from "../../../context/SocketContext";
 
-export const Contact = ({ contact, setSearchResults, socket })=>{
+function Contact({ contact, setSearchResults, socket }) {
 
     const dispatch = useDispatch();
-    const { user } = useSelector((state)=> state.user);
+    const { user } = useSelector((state) => state.user);
     const { token } = user;
     const values = {
         receiver_id: contact._id,
         token
     }
     // console.log(values);
-    const openConversation = async ()=>{
-        await dispatch(open_create_conversation(values));
+    const openConversation = async () => {
+        const newConvo = await dispatch(open_create_conversation(values));
+        socket.emit('join conversation', newConvo.payload._id)
         setSearchResults([]);
     }
 
     return (
-        <li onClick={()=> openConversation()} className="list-none h-[72px] hover:dark:bg-dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px]">
+        <li onClick={() => openConversation()} className="list-none h-[72px] hover:dark:bg-dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px]">
             <div className="flex items-center gap-x-3 py-[10px]">
                 <div className="flex items-center gap-x-3">
                     <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
@@ -35,7 +37,11 @@ export const Contact = ({ contact, setSearchResults, socket })=>{
                         <div>
                             <div className="flex items-center gap-x-1 dark:text-dark_text_2">
                                 <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                                    <p>{contact.status}</p>
+                                    <p>
+                                        {contact.status.length > 25
+                                            ? `${contact.status.substring(0, 25)}...`
+                                            : contact.status}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -46,3 +52,10 @@ export const Contact = ({ contact, setSearchResults, socket })=>{
         </li>
     );
 }
+
+const ContactWithContext = (props) => (
+    <SocketContext.Consumer>
+        {(socket) => <Contact {...props} socket={socket} />}
+    </SocketContext.Consumer>
+);
+export default ContactWithContext;
