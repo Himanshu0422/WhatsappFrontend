@@ -1,4 +1,4 @@
-import { Contact } from "./Contact.js";
+import Contact  from "./Contact.js";
 
 export default function SearchResults({ searchResults, setSearchResults }) {
     return (
