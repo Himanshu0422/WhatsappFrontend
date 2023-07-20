@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AttachmentIcon } from '../../../../svg'
-import Menu from './Menu'
+import Menu from './menu/Menu';
 
 export default function Attachments({showAttachments, setShowAttachments, setShowPicker}) {
     return (
