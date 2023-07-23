@@ -7,7 +7,7 @@ const initialState = {
   conversations: [],
   activeConversation: {},
   messages: [],
-  notificatoins: [],
+  notifications: [],
   files: []
 };
 
@@ -68,11 +68,15 @@ export const getConversationMessages = createAsyncThunk(
 export const sendMessage = createAsyncThunk(
   "message/send",
   async (values, { rejectWithValue }) => {
-    const { token, convo_id, message, files } = values;
+    const { token, message, convo_id, files } = values;
     try {
       const { data } = await axios.post(
         "/message",
-        { convo_id, message, files },
+        {
+          message,
+          convo_id,
+          files
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -95,8 +99,8 @@ export const chatSlice = createSlice({
     },
     updateMessages: (state, action) => {
       let convo = state.activeConversation;
-      if(convo._id === action.payload.conversation._id){
-        state.messages = [...state.messages ,action.payload]
+      if (convo._id === action.payload.conversation._id) {
+        state.messages = [...state.messages, action.payload];
       }
       let conversation = {
         ...action.payload.conversation,
@@ -172,6 +176,7 @@ export const chatSlice = createSlice({
         );
         newConvos.unshift(conversation);
         state.conversations = newConvos;
+        state.files = [];
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.status = "failed";
@@ -180,5 +185,12 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { setActiveConversations, updateMessages, addFiles, clearFiles, removeFiles } = chatSlice.actions;
+export const {
+  setActiveConversations,
+  updateMessages,
+  addFiles,
+  clearFiles,
+  removeFiles
+} = chatSlice.actions;
+
 export default chatSlice.reducer;
