@@ -7,7 +7,7 @@ import ChatActions from './actions/ChatActions';
 import { checkOnlineStatus } from '../../utils/chat';
 import FilesPreview from './preview/files/FilesPreview';
 
-export default function ChatContainer({ onlineUsers, typing }) {
+export default function ChatContainer({ onlineUsers, typing, callUser }) {
 
     const dispatch = useDispatch();
     const { activeConversation, files } = useSelector((state) => state.chat);
@@ -27,7 +27,7 @@ export default function ChatContainer({ onlineUsers, typing }) {
     return (
         <div className="relative w-full h-full border-1 dark:border-1-dark 2 select-none overflow-hidden">
             <div>
-                <ChatHeader online={checkOnlineStatus(onlineUsers,user, activeConversation.users)} />
+                <ChatHeader online={checkOnlineStatus(onlineUsers,user, activeConversation.users)} callUser={callUser} />
                 {files.length>0 ?
                     <FilesPreview /> : 
                     <>
