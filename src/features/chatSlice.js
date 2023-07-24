@@ -1,6 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const CONVERSATION_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/conversation`;
+const MESSAGE_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/message`;
+
 const initialState = {
 	status: "",
 	error: "",
@@ -15,7 +18,7 @@ export const getConversations = createAsyncThunk(
 	"conervsation/all",
 	async (token, { rejectWithValue }) => {
 		try {
-			const { data } = await axios.get("/conversation", {
+			const { data } = await axios.get(CONVERSATION_ENDPOINT, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -28,7 +31,7 @@ export const getConversations = createAsyncThunk(
 );
 
 export const open_create_conversation = createAsyncThunk(
-	"conervsation/open_create",
+	`${CONVERSATION_ENDPOINT}/open_create`,
 	async (values, { rejectWithValue }) => {
 		const { token, receiver_id, isGroup } = values;
 		try {
@@ -49,7 +52,7 @@ export const open_create_conversation = createAsyncThunk(
 );
 
 export const getConversationMessages = createAsyncThunk(
-	"conervsation/messages",
+	`${CONVERSATION_ENDPOINT}/messages`,
 	async (values, { rejectWithValue }) => {
 		const { token, convo_id } = values;
 		try {
@@ -66,7 +69,7 @@ export const getConversationMessages = createAsyncThunk(
 );
 
 export const sendMessage = createAsyncThunk(
-	"message/send",
+	`${MESSAGE_ENDPOINT}/send`,
 	async (values, { rejectWithValue }) => {
 		const { token, message, convo_id, files } = values;
 		try {
@@ -91,7 +94,7 @@ export const sendMessage = createAsyncThunk(
 );
 
 export const createGroupConversation = createAsyncThunk(
-	"conervsation/create_group",
+	`${CONVERSATION_ENDPOINT}/create_group`,
 	async (values, { rejectWithValue }) => {
 		const { token, name, users } = values;
 		try {
