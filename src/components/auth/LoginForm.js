@@ -8,7 +8,7 @@ import { PulseLoader } from 'react-spinners/'
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../features/userSlice';
 
-function RegisterForm() {
+function LoginForm() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { status, error } = useSelector((state) => state.user);
@@ -73,4 +73,4 @@ function RegisterForm() {
 	)
 }
 
-export default RegisterForm;
+export default LoginForm;
