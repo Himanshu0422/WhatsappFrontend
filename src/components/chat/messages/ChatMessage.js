@@ -28,7 +28,7 @@ export default function ChatMessage({ typing }) {
                         }
                         {
                             message.message.length>0 ? (
-                                <Message message={message} key={message._id} me={user._id === message.sender._id} />
+                                <Message message={message} me={user._id === message.sender._id} />
                             ): 
                             null
                         }

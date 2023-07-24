@@ -68,7 +68,7 @@ function Home({ socket }) {
 		});
 		socket.on('end call', () => {
 			setShow(false);
-			setCall({ ...call, callEnded: true, receiveingCall: false });
+			setCall({ ...call, callEnded: true, receivingCall: false });
 			myVideo.current.srcObject = null;
 			if (callAccepted) {
 			  connectionRef?.current?.destroy();
@@ -83,7 +83,6 @@ function Home({ socket }) {
 			name: getConversationName(user, activeConversation.users),
 			picture: getConversationPicture(user, activeConversation.users),
 		});
-		console.log(call);
 		const peer = new Peer({
 			initiator: true,
 			trickle: false,
@@ -128,7 +127,7 @@ function Home({ socket }) {
 	//--end call  funcion
 	const endCall = () => {
 		setShow(false);
-		setCall({ ...call, callEnded: true, receiveingCall: false });
+		setCall({ ...call, callEnded: true, receivingCall: false});
 		myVideo.current.srcObject = null;
 		socket.emit('end call', call.socketId);
 		connectionRef?.current?.destroy();
@@ -179,7 +178,7 @@ function Home({ socket }) {
 					)}
 				</div>
 			</div>
-			<div className={(show || call.signal) && !call.callEnded ? '' : 'hidden'}>
+			<div className={(show || call.signal) && !callEnded ? '' : 'hidden'}>
 				<Call
 					call={call}
 					setCall={setCall}

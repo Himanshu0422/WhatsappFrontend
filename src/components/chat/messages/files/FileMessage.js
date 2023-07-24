@@ -37,7 +37,7 @@ export default function FileMessage({ FileMessage, message, me }) {
                         {type === "IMAGE" || type === "VIDEO" ? (
                             <FileImageVideo url={file.secure_url} type={type} />
                         ) : (
-                            <FileOthers file={file} type={type} />
+                            <FileOthers file={file} type={type} me={me} />
                         )}
                     </p>
                     <span className="absolute right-1.5 bottom-1.5 text-xs text-dark_text_5 leading-none">

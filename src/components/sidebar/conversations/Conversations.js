@@ -12,7 +12,7 @@ function Conversations({onlineUsers, typing}) {
         <div className='convos scrollbar'>
             <ul>
                 {conversations && conversations
-                    .filter((c) => c.latestMessage || c._id === activeConversation._id)
+                    .filter((c) => c.latestMessage || c._id === activeConversation._id || c.isGroup === true)
                     .map((convo) => {
                         let check = checkOnlineStatus(onlineUsers, user, convo.users);
                         return(
