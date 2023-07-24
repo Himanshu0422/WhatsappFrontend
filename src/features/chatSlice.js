@@ -15,7 +15,7 @@ const initialState = {
 };
 
 export const getConversations = createAsyncThunk(
-	"conervsation/all",
+	`${CONVERSATION_ENDPOINT}/all`,
 	async (token, { rejectWithValue }) => {
 		try {
 			const { data } = await axios.get(CONVERSATION_ENDPOINT, {
@@ -36,7 +36,7 @@ export const open_create_conversation = createAsyncThunk(
 		const { token, receiver_id, isGroup } = values;
 		try {
 			const { data } = await axios.post(
-				"/conversation",
+				CONVERSATION_ENDPOINT,
 				{ receiver_id, isGroup },
 				{
 					headers: {
@@ -56,7 +56,7 @@ export const getConversationMessages = createAsyncThunk(
 	async (values, { rejectWithValue }) => {
 		const { token, convo_id } = values;
 		try {
-			const { data } = await axios.get(`/message/${convo_id}`, {
+			const { data } = await axios.get(`${MESSAGE_ENDPOINT}/${convo_id}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -74,7 +74,7 @@ export const sendMessage = createAsyncThunk(
 		const { token, message, convo_id, files } = values;
 		try {
 			const { data } = await axios.post(
-				"/message",
+				MESSAGE_ENDPOINT,
 				{
 					message,
 					convo_id,
@@ -99,7 +99,7 @@ export const createGroupConversation = createAsyncThunk(
 		const { token, name, users } = values;
 		try {
 			const { data } = await axios.post(
-				'conversation/group',
+				`${CONVERSATION_ENDPOINT}/group`,
 				{ name, users },
 				{
 					headers: {
